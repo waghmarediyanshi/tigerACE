@@ -1,0 +1,303 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TigerID AI — Explainable Wildlife Intelligence</title>
+<style>
+:root{--bg:#f4f7f2;--card:#fff;--green:#174d31;--green2:#2c7a4b;--ink:#17231b;--muted:#6b786f;--line:#dce6de;--amber:#d4872d;--red:#b94b43}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);font-family:Inter,Segoe UI,Arial;color:var(--ink)}
+header{background:linear-gradient(135deg,#123b26,#286a43);color:#fff;padding:20px 5%;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:5}
+.logo{font-size:23px;font-weight:800}.subtitle{font-size:12px;opacity:.75;margin-top:3px}nav a{color:#fff;text-decoration:none;margin-left:22px;font-size:13px}
+main{max-width:1250px;margin:auto;padding:28px 5%}.hero{display:grid;grid-template-columns:1.5fr .8fr;gap:20px}.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:22px;box-shadow:0 8px 25px #123b260c}
+h1{font-size:38px;margin:8px 0}.lead{color:var(--muted);line-height:1.65}.badge{display:inline-block;background:#e7f3e9;color:var(--green);font-size:11px;font-weight:800;padding:7px 10px;border-radius:20px}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:20px}.stat{background:#f6faf6;border-radius:12px;padding:13px}.stat b{font-size:25px;display:block}.stat small{color:var(--muted)}
+.section{margin-top:24px}.section-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}.section-head h2{font-size:20px;margin:0}
+.workflow{display:grid;grid-template-columns:repeat(5,1fr);gap:10px}.step{background:#fff;border:1px solid var(--line);border-radius:14px;padding:14px;text-align:center}.step strong{font-size:13px}.circle{width:30px;height:30px;border-radius:50%;background:#e5f1e8;color:var(--green);display:grid;place-items:center;margin:0 auto 8px;font-weight:800}.step small{display:block;color:var(--muted);line-height:1.4;margin-top:5px}
+.demo{display:grid;grid-template-columns:1fr 1fr;gap:20px}.drop{min-height:300px;border:2px dashed #a8c7b1;border-radius:16px;background:#f8fbf8;display:grid;place-items:center;text-align:center;padding:20px;overflow:hidden}.drop img{max-width:100%;max-height:300px;border-radius:12px;display:none}.upload{background:var(--green);color:#fff;padding:11px 15px;border-radius:10px;cursor:pointer;font-weight:700;display:inline-block}.upload input{display:none}
+button{border:0;border-radius:10px;padding:11px 15px;font-weight:700;cursor:pointer}.primary{background:var(--green);color:#fff}.secondary{background:#e8f1ea;color:var(--green)}.danger{background:#fff0ef;color:var(--red)}
+.controls{display:flex;gap:9px;margin-top:12px;flex-wrap:wrap}.controls select{padding:10px;border:1px solid var(--line);border-radius:9px;background:#fff}
+.result{display:none;margin-top:14px}.result-grid{display:grid;grid-template-columns:1fr 1fr;gap:15px}.score{font-size:40px;font-weight:900;color:var(--green)}.meter{height:9px;background:#e2e9e3;border-radius:10px;overflow:hidden}.meter i{display:block;height:100%;width:0;background:var(--green2);transition:width .8s}
+.explain{background:#f7faf7;border:1px solid var(--line);border-radius:14px;padding:15px}.explain li{margin:8px 0;font-size:13px}.match-visual{position:relative;height:180px;border-radius:12px;background:repeating-linear-gradient(70deg,#d2bd8c 0 13px,#242c25 13px 20px,#e1cf9e 20px 30px);overflow:hidden}.point{position:absolute;width:12px;height:12px;border:3px solid white;background:#e16f2b;border-radius:50%;box-shadow:0 2px 7px #0005}.line{position:absolute;height:2px;background:#e16f2b;transform-origin:left center;opacity:.8}
+.evidence-title{display:flex;justify-content:space-between;align-items:center;margin:16px 0 8px}.evidence-title small{color:var(--muted)}
+.compare{display:grid;grid-template-columns:1fr 1fr;gap:10px}.image-panel{border:1px solid var(--line);border-radius:12px;padding:8px;background:#f7faf7}.image-panel b{font-size:12px}.canvas-wrap{position:relative;margin-top:7px;border-radius:9px;overflow:hidden;background:#d7c28f;min-height:160px}.canvas-wrap canvas{display:block;width:100%;height:190px;object-fit:contain}.legend{font-size:10px;color:var(--muted);margin-top:5px}.orange-dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:#e16f2b;margin-right:4px}
+.feedback{display:none;background:#fff8ed;border:1px solid #f0d5ad;border-radius:14px;padding:15px;margin-top:14px}.feedback h3{margin:0 0 5px}.feedback p{font-size:12px;color:var(--muted)}
+.catalog{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.tiger{background:#fff;border:1px solid var(--line);border-radius:14px;padding:15px}.stripe{height:70px;border-radius:10px;background:repeating-linear-gradient(66deg,#252b25 0 6px,#d4c18f 6px 14px,#252b25 14px 20px,#c4ae79 20px 31px);margin-bottom:12px}.tiger b{font-size:15px}.tiger small{display:block;color:var(--muted);margin-top:5px}
+.learning{display:grid;grid-template-columns:1fr 1fr;gap:15px}.learningbox{padding:17px;border-radius:14px;background:#f5faf6;border:1px solid var(--line)}.arrow{font-size:24px;color:var(--green);text-align:center;padding:5px}
+pre{background:#13251b;color:#d9f1df;padding:14px;border-radius:12px;font-size:11px;overflow:auto}.toast{position:fixed;right:20px;bottom:20px;background:#173f2a;color:#fff;padding:13px 16px;border-radius:12px;display:none;box-shadow:0 8px 30px #0003}
+@media(max-width:850px){.hero,.demo,.learning{grid-template-columns:1fr}.workflow{grid-template-columns:1fr 1fr}.catalog{grid-template-columns:1fr}.stats{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<header>
+<div><div class="logo">🐅 TigerID AI</div><div class="subtitle">Explainable Individual Tiger Re-identification • Pench Tiger Reserve</div></div>
+<nav><a href="#identify">Identify</a><a href="#learning">Active Learning</a><a href="#catalog">Catalogue</a></nav>
+</header>
+
+<main>
+<section class="hero">
+<div class="card">
+<span class="badge">INNOVATION PROTOTYPE</span>
+<h1>From image to explainable identity.</h1>
+<p class="lead">TigerID AI detects an individual tiger from its stripe pattern, shows <b>why</b> the AI believes it is a match, and learns from forest-officer verification.</p>
+<div class="stats"><div class="stat"><b id="tigerCount">47</b><small>Known tigers</small></div><div class="stat"><b>1,284</b><small>Linked captures</small></div><div class="stat"><b id="feedbackCount">0</b><small>Verified feedback</small></div></div>
+</div>
+<div class="card">
+<h3 style="margin-top:0">The innovation</h3>
+<p class="lead"><b>1. Explainable AI:</b> display matching stripe landmarks, intersections and distinctive gaps instead of an unexplained percentage.</p>
+<p class="lead"><b>2. Active Learning:</b> every officer correction becomes a verified training example for future identification.</p>
+</div>
+</section>
+
+<section class="section">
+<div class="section-head"><h2>AI workflow</h2><span class="badge">Explain → Verify → Learn</span></div>
+<div class="workflow">
+<div class="step"><div class="circle">1</div><strong>Detect</strong><small>Find tiger and flank</small></div>
+<div class="step"><div class="circle">2</div><strong>Extract</strong><small>Build stripe features</small></div>
+<div class="step"><div class="circle">3</div><strong>Explain</strong><small>Highlight evidence</small></div>
+<div class="step"><div class="circle">4</div><strong>Verify</strong><small>Officer confirms result</small></div>
+<div class="step"><div class="circle">5</div><strong>Learn</strong><small>Store verified example</small></div>
+</div>
+</section>
+
+<section class="section" id="identify">
+<div class="section-head"><h2>Live identification demo</h2><span style="font-size:12px;color:var(--muted)">Backend-connected prototype</span></div>
+<div class="demo">
+<div class="card">
+<div class="drop" id="drop">
+<div id="dropText"><div style="font-size:42px">📷</div><b>Upload a camera-trap image</b><p style="color:var(--muted);font-size:13px">JPG / PNG • side/flank image works best</p><label class="upload">Choose image<input id="file" type="file" accept="image/*"></label></div>
+<img id="preview" alt="Uploaded camera trap image">
+</div>
+<div class="controls">
+<select id="station"><option>PN-CT-014</option><option>PN-CT-027</option><option>PN-CT-041</option></select>
+<button class="primary" onclick="identifyTiger()">🔍 Identify Tiger</button>
+</div>
+<div id="error" style="color:var(--red);font-size:12px;margin-top:8px"></div>
+</div>
+
+<div class="card">
+<h3 style="margin-top:0">Explainable AI evidence</h3>
+<div id="empty"><p class="lead">Upload an image and click <b>Identify Tiger</b>. The backend will return a match and the evidence used by this prototype.</p></div>
+<div id="result" class="result">
+<div class="result-grid">
+<div><small style="color:var(--muted)">BEST MATCH</small><h2 id="tigerId" style="margin:4px 0">—</h2><div id="tigerName" style="color:var(--muted)">—</div></div>
+<div><div class="score" id="score">—</div><small style="color:var(--muted)">confidence</small></div>
+</div>
+<div class="meter"><i id="meter"></i></div>
+<div class="evidence-title"><b>Visual explanation</b><small>orange = matched stripe landmarks</small></div>
+<div class="compare">
+  <div class="image-panel">
+    <b>Uploaded camera-trap image</b>
+    <div class="canvas-wrap"><canvas id="uploadedCanvas"></canvas></div>
+    <div class="legend"><span class="orange-dot"></span>AI-detected landmarks</div>
+  </div>
+  <div class="image-panel">
+    <b>Matched catalogue reference</b>
+    <div class="canvas-wrap"><canvas id="referenceCanvas"></canvas></div>
+    <div class="legend"><span class="orange-dot"></span>reference landmarks</div>
+  </div>
+</div>
+<div class="explain"><b>Why did the AI choose this?</b><ul id="reasons"></ul></div>
+<div id="decision" style="margin-top:10px;padding:11px;border-radius:10px;background:#eaf5ed;font-size:13px"></div>
+<div class="feedback" id="feedback">
+<h3>👨‍💼 Human verification</h3>
+<p>Is the AI prediction correct? Your answer becomes a verified learning example.</p>
+<button class="primary" onclick="sendFeedback(true)">✓ Correct — Learn</button>
+<button class="danger" onclick="sendFeedback(false)">✕ Incorrect</button>
+</div>
+</div>
+</div>
+</div>
+</section>
+
+<section class="section" id="learning">
+<div class="section-head"><h2>Active learning loop</h2><span class="badge">Innovation #3</span></div>
+<div class="card learning">
+<div class="learningbox"><b>AI prediction</b><p>“PENCH-TIG-017 — 96.8%”</p><div class="arrow">↓</div><b>Forest officer verifies</b><p>“Correct”</p></div>
+<div class="learningbox"><b>Training queue updated</b><p>+1 verified example</p><div class="arrow">↓</div><b>Future model improvement</b><p>The verified image is retained as trusted labelled data.</p></div>
+</div>
+<p class="lead" style="font-size:12px;margin-top:9px">In a production deployment, this queue would feed scheduled model retraining after quality checks, rather than changing the live model immediately.</p>
+</section>
+
+<section class="section" id="catalog">
+<div class="section-head"><h2>Tiger catalogue</h2><span class="badge">Persistent identities</span></div>
+<div class="catalog" id="catalogGrid"></div>
+</section>
+
+<section class="section">
+<div class="card">
+<h3 style="margin-top:0">Prototype API</h3>
+<pre>POST /api/identify
+→ tiger_id
+→ confidence
+→ stripe landmarks
+→ intersections
+→ distinctive gaps
+→ explainable evidence
+→ decision
+
+POST /api/feedback
+→ verified / corrected identity
+→ training example count
+→ feedback history</pre>
+</div>
+</section>
+</main>
+<div class="toast" id="toast"></div>
+
+<script>
+const API = "http://127.0.0.1:8000";
+let currentResult = null;
+const file = document.getElementById("file");
+file.addEventListener("change", e=>{
+ const f=e.target.files[0]; if(!f)return;
+ document.getElementById("preview").src=URL.createObjectURL(f);
+ document.getElementById("preview").style.display="block";
+ document.getElementById("dropText").style.display="none";
+ document.getElementById("preview").onload=()=>{
+   if(currentResult) drawPoints(currentResult.stripe_points,currentResult.reference_points);
+ };
+});
+
+async function identifyTiger(){
+ const f=file.files[0];
+ const err=document.getElementById("error");
+ err.textContent="";
+ if(!f){err.textContent="Please choose an image first.";return;}
+ const fd=new FormData(); fd.append("file",f);
+ try{
+  const r=await fetch(API+"/api/identify",{method:"POST",body:fd});
+  if(!r.ok) throw new Error((await r.json()).detail || "Backend error");
+  const d=await r.json(); currentResult=d;
+  document.getElementById("empty").style.display="none";
+  document.getElementById("result").style.display="block";
+  document.getElementById("tigerId").textContent=d.tiger_id;
+  document.getElementById("tigerName").textContent=d.tiger_name;
+  document.getElementById("score").textContent=d.confidence_percent+"%";
+  setTimeout(()=>document.getElementById("meter").style.width=(d.confidence*100)+"%",50);
+  document.getElementById("reasons").innerHTML=d.explanation.map(x=>"<li>✓ "+x+"</li>").join("");
+  document.getElementById("decision").textContent = d.decision==="auto_link" ? "🟢 "+d.decision_text : "🟠 "+d.decision_text;
+  drawPoints(d.stripe_points, d.reference_points);
+  document.getElementById("feedback").style.display="block";
+ }catch(e){err.textContent="Cannot reach backend. Start FastAPI using the README instructions.";console.error(e);}
+}
+
+function drawPoints(points, referencePoints){
+ const img=document.getElementById("preview");
+ drawImageEvidence(document.getElementById("uploadedCanvas"), img, points, "#e16f2b", true);
+ drawReferenceEvidence(document.getElementById("referenceCanvas"), referencePoints);
+}
+
+function fitCanvas(canvas, width, height){
+ const dpr=window.devicePixelRatio||1;
+ canvas.width=width*dpr; canvas.height=height*dpr;
+ canvas.style.width="100%"; canvas.style.height=height+"px";
+ const ctx=canvas.getContext("2d"); ctx.setTransform(dpr,0,0,dpr,0,0);
+ return ctx;
+}
+
+function drawImageEvidence(canvas, img, points, color, connect){
+ if(!img.complete) return;
+ const width=canvas.parentElement.clientWidth || 420, height=190;
+ const ctx=fitCanvas(canvas,width,height);
+ ctx.clearRect(0,0,width,height);
+ const ratio=Math.min(width/img.naturalWidth,height/img.naturalHeight);
+ const w=img.naturalWidth*ratio, h=img.naturalHeight*ratio;
+ const ox=(width-w)/2, oy=(height-h)/2;
+ ctx.drawImage(img,ox,oy,w,h);
+
+ const sx=w/256, sy=h/256;
+ ctx.strokeStyle=color; ctx.lineWidth=2; ctx.globalAlpha=.85;
+ if(connect){
+   for(let i=1;i<points.length;i++){
+     ctx.beginPath();
+     ctx.moveTo(ox+points[i-1].x*sx,oy+points[i-1].y*sy);
+     ctx.lineTo(ox+points[i].x*sx,oy+points[i].y*sy);
+     ctx.stroke();
+   }
+ }
+ ctx.globalAlpha=1;
+ points.forEach((p,i)=>{
+   const x=ox+p.x*sx,y=oy+p.y*sy;
+   ctx.beginPath();ctx.arc(x,y,6,0,Math.PI*2);ctx.fillStyle=color;ctx.fill();
+   ctx.beginPath();ctx.arc(x,y,9,0,Math.PI*2);ctx.strokeStyle="#fff";ctx.lineWidth=2;ctx.stroke();
+   ctx.fillStyle="#fff";ctx.font="bold 9px Arial";ctx.textAlign="center";ctx.fillText(String(i+1),x,y+3);
+ });
+}
+
+function drawReferenceEvidence(canvas, points){
+ const width=canvas.parentElement.clientWidth || 420, height=190;
+ const ctx=fitCanvas(canvas,width,height);
+ ctx.fillStyle="#d6c18e";ctx.fillRect(0,0,width,height);
+ // Stylized reference flank for prototype demonstration.
+ ctx.fillStyle="#bda571";ctx.beginPath();ctx.ellipse(width/2,height/2,width*.43,height*.38,0,0,Math.PI*2);ctx.fill();
+ ctx.save();ctx.clip();
+ ctx.strokeStyle="#20261f";ctx.lineWidth=8;
+ for(let x=-width;x<width*2;x+=34){
+   ctx.beginPath();ctx.moveTo(x,0);ctx.quadraticCurveTo(x-35,height*.48,x+10,height);ctx.stroke();
+ }
+ ctx.restore();
+
+ const sx=width/256,sy=height/256;
+ ctx.strokeStyle="#e16f2b";ctx.lineWidth=2;ctx.globalAlpha=.85;
+ for(let i=1;i<points.length;i++){
+   ctx.beginPath();ctx.moveTo(points[i-1].x*sx,points[i-1].y*sy);ctx.lineTo(points[i].x*sx,points[i].y*sy);ctx.stroke();
+ }
+ ctx.globalAlpha=1;
+ points.forEach((p,i)=>{
+   const x=p.x*sx,y=p.y*sy;
+   ctx.beginPath();ctx.arc(x,y,6,0,Math.PI*2);ctx.fillStyle="#e16f2b";ctx.fill();
+   ctx.beginPath();ctx.arc(x,y,9,0,Math.PI*2);ctx.strokeStyle="#fff";ctx.lineWidth=2;ctx.stroke();
+   ctx.fillStyle="#fff";ctx.font="bold 9px Arial";ctx.textAlign="center";ctx.fillText(String(i+1),x,y+3);
+ });
+}
+
+
+async function sendFeedback(correct){
+ if(!currentResult)return;
+ let corrected=null;
+ if(!correct){
+   corrected=prompt("Enter the correct Tiger ID (example PENCH-TIG-021):");
+   if(!corrected)return;
+ }
+ const payload={
+  capture_id:currentResult.capture_id,
+  predicted_tiger_id:currentResult.tiger_id,
+  correct:correct,
+  corrected_tiger_id:corrected,
+  reviewer:"Forest Officer",
+  comment:correct?"Confirmed by officer":"Corrected by officer"
+ };
+ try{
+  const r=await fetch(API+"/api/feedback",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(payload)});
+  if(!r.ok)throw new Error("Feedback failed");
+  const d=await r.json();
+  document.getElementById("feedback").style.display="none";
+  showToast("✓ Verified example added to learning queue");
+  loadData();
+ }catch(e){showToast("Backend unavailable — feedback not saved");}
+}
+
+async function loadData(){
+ try{
+  const [t,f]=await Promise.all([fetch(API+"/api/tigers"),fetch(API+"/api/feedback")]);
+  const tigers=await t.json(), feedback=await f.json();
+  document.getElementById("feedbackCount").textContent=feedback.length;
+  document.getElementById("tigerCount").textContent=Math.max(47,tigers.length);
+  document.getElementById("catalogGrid").innerHTML=tigers.map((x,i)=>`
+   <div class="tiger"><div class="stripe" style="background:repeating-linear-gradient(${60+i*17}deg,#252b25 0 6px,#d4c18f 6px 14px,#252b25 14px 20px,#c4ae79 20px 31px)"></div>
+   <b>${x.tiger_id}</b><small>${x.sex} • ${x.captures} captures • ${x.stations} stations</small>
+   <small>Verified examples: <b>${x.training_examples}</b></small></div>`).join("");
+ }catch(e){
+  document.getElementById("catalogGrid").innerHTML="<div class='card'>Start the backend to load the persistent catalogue.</div>";
+ }
+}
+function showToast(msg){const t=document.getElementById("toast");t.textContent=msg;t.style.display="block";setTimeout(()=>t.style.display="none",3000)}
+window.addEventListener("resize",()=>{
+ if(currentResult) drawPoints(currentResult.stripe_points,currentResult.reference_points);
+});
+loadData();
+</script>
+</body>
+</html>
